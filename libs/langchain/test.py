@@ -2,8 +2,14 @@ from dotenv import load_dotenv
 
 from langchain.chat_models import ChatOpenAI
 from langchain.evaluation.comparison.llm_as_a_judge import LLMAsAJudgePairwiseEvalChain
+from datasets import load_dataset
+
+dataset = load_dataset("griffin/chain_of_density")
 
 load_dotenv()
+
+# demo script for LLM-as-a-judge
+# TODO: either create a notebook or delete this file
 
 llm = ChatOpenAI(temperature=0, model="gpt-4")
 
