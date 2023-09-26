@@ -100,20 +100,23 @@ class DeepEvalCallbackHandler(BaseCallbackHandler):
 
     def on_llm_end(self, response: LLMResult, **kwargs: Any) -> None:
         """Log records to deepeval when an LLM ends."""
-        from deepeval.metrics.answer_relevancy import AnswerRelevancy
+        from deepeval.metrics.answer_relevancy import AnswerRelevancyMetric
         from deepeval.metrics.bias_classifier import UnBiasedMetric
         from deepeval.metrics.metric import Metric
         from deepeval.metrics.toxic_classifier import NonToxicMetric
+        from deepeval.test_case import LLMTestCase
 
         for metric in self.metrics:
             for i, generation in enumerate(response.generations):
                 # Here, we only measure the first generation's output
                 output = generation[0].text
                 query = self.prompts[i]
-                if isinstance(metric, AnswerRelevancy):
+                if isinstance(metric, AnswerRelevancyMetric):
                     result = metric.measure(
+                        LLMTestCase(
                         output=output,
                         query=query,
+                        )
                     )
                     print(f"Answer Relevancy: {result}")
                 elif isinstance(metric, UnBiasedMetric):
